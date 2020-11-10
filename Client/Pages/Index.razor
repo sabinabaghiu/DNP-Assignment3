@@ -1,0 +1,12 @@
+﻿@page "/"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Hello, everyone!</h3>
+<AuthorizeView Policy="MustBeAdmin">
+    <h5>You are an admin, so you have more functionalities.</h5>
+</AuthorizeView>
+
+
+@code{
+    
+}

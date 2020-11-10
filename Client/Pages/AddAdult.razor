@@ -1,0 +1,82 @@
+@page "/AddAdult"
+@attribute [Authorize(Policy = "MustBeAdmin")]
+@using Models
+@using Assignment1.Data
+@inject IAdultsService AdultsService
+@inject NavigationManager NavigationManager
+
+<h3>AddAdult</h3>
+
+<EditForm Model="@newAdultItem" OnValidSubmit="@AddNewAdult">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="row">
+        <div class="form-group col-md">
+            First name:<br/>
+            <InputText rows="4" @bind-Value="newAdultItem.FirstName"/>
+        </div>
+        <div class="form-group col-md">
+            Last name:<br/>
+            <InputText rows="4" @bind-Value="newAdultItem.LastName"/>
+        </div>
+        <div class="form-group col-md">
+            Age:<br/>
+            <InputNumber rows="4" @bind-Value="newAdultItem.Age"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class=" form-group col-md">
+            Hair color:<br/>
+            <InputText rows="4" @bind-Value="newAdultItem.HairColor"/>
+        </div>
+        <div class="col-md">
+            Eye color:<br/>
+            <InputText rows="4" @bind-Value="newAdultItem.EyeColor"/>
+        </div>
+        <div class="form-group col-md">
+            Sex:<br/>
+            <InputText rows="4" @bind-Value="newAdultItem.Sex"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md">
+            Weight:<br/>
+            <InputNumber rows="4" @bind-Value="newAdultItem.Weight"/>
+        </div>
+        <div class="form-group col-md">
+            Height:<br/>
+            <InputNumber rows="4" @bind-Value="newAdultItem.Height"/>
+        </div>
+        <div class="form-group col-md">
+            Job title:<br/>
+            <InputText rows="4" @bind-Value="newAdultItem.JobTitle"/>
+        </div>
+    </div>
+    <p class="actions">
+        <button class="btn btn-outline-dark" type="submit">Create</button>
+    </p>
+</EditForm>
+
+@code {
+    private Adult newAdultItem = new Adult();
+
+    private void AddNewAdult()
+    {
+        AdultsService.AddAdultAsync(newAdultItem);
+        NavigationManager.NavigateTo("/AdultList");
+    }
+
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo($"/Login");
+        }
+    }
+
+}
